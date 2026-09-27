@@ -1,0 +1,54 @@
+{
+  "generated_at": "2026-01-01 12:00:00",
+  "channels": [
+    {
+      "id": "volc-codingplan",
+      "name": "Volcengine Ark Coding Plan",
+      "state": "ok",
+      "status": "Running",
+      "windows": [
+        { "label": "5h window", "used_pct": 17.1, "reset": "01-01 21:27" },
+        { "label": "weekly window", "used_pct": 14.5, "reset": "01-08 00:00" },
+        { "label": "monthly window", "used_pct": 21.4, "reset": "01-25 23:59" }
+      ]
+    },
+    {
+      "id": "volc-agentplan",
+      "name": "Volcengine Ark Agent Plan",
+      "state": "ok",
+      "status": "Running",
+      "plan_type": "pro",
+      "windows": [
+        { "label": "5h window", "used": 12000, "quota": 100000, "used_pct": 12.0, "reset": "01-01 21:00" },
+        { "label": "daily window", "used": 34000, "quota": 400000, "used_pct": 8.5, "reset": "01-02 00:00" },
+        { "label": "weekly window", "used": 210000, "quota": 2000000, "used_pct": 10.5, "reset": "01-08 00:00" },
+        { "label": "monthly window", "used": 900000, "quota": 8000000, "used_pct": 11.3, "reset": "01-31 23:59" }
+      ]
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "state": "ok",
+      "is_available": true,
+      "balances": [
+        { "currency": "CNY", "total_balance": "10.00", "topped_up": "10.00" }
+      ]
+    },
+    {
+      "id": "opencode-go",
+      "name": "OpenCode Go",
+      "state": "ok",
+      "windows": [
+        { "label": "5h window", "used_pct": 33, "limit": "$12", "reset": "2026-01-01 17:00" },
+        { "label": "weekly window", "used_pct": 12, "limit": "$30", "reset": "2026-01-05 00:00" },
+        { "label": "monthly window", "used_pct": 41, "limit": "$60", "reset": "2026-02-01 00:00" }
+      ]
+    },
+    {
+      "id": "copilot",
+      "name": "GitHub Copilot",
+      "state": "unavailable",
+      "note": "reserved channel: set GITHUB_TOKEN to a PAT with the copilot scope to read usage"
+    }
+  ]
+}

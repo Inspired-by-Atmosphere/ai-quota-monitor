@@ -1,0 +1,14 @@
+# credentials — never commit these
+.env
+*.env
+!.env.example
+
+# collected output
+data/
+*.log
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/

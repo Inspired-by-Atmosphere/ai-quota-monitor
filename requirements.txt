@@ -1,0 +1,2 @@
+# No third-party dependencies: everything here uses the Python standard library.
+# Kept as an explicit file so tooling that expects a manifest stays happy.
