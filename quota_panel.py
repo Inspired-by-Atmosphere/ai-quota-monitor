@@ -212,7 +212,7 @@ def collect_copilot(env, token):
         body = http_get("https://api.github.com/user/copilot/usage",
                         {"Authorization": f"Bearer {pat}", "Accept": "application/vnd.github+json"})
     except urllib.error.HTTPError as e:
-        if e.code in (401, 403):
+        if e.code in (401, 403, 404):
             return {"state": "unavailable",
                     "note": f"token rejected (HTTP {e.code}): needs a PAT with the copilot scope"}
         return {"state": "error", "note": f"read failed: HTTP {e.code}"}
