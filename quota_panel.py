@@ -128,6 +128,9 @@ def collect_volc_codingplan(env, ak, sk):
             "used_pct": round(pct, 1),
             "reset": fmt_time(reset),
         })
+    if not windows:
+        return {"state": "unavailable", "status": status, "windows": [],
+                "note": "response carries no QuotaUsage (inactive or reclaimed plan?)"}
     return {"state": "ok", "status": status, "windows": windows}
 
 
@@ -222,6 +225,11 @@ def collect_copilot(env, token):
 
 
 # ---------- main ----------
+# (suffix, label) for each Ark Coding Plan account you want the panel to watch.
+# suffix "" -> VOLC_ARK_AK / VOLC_ARK_SK, "_2" -> VOLC_ARK_AK_2 / VOLC_ARK_SK_2, ...
+ACCOUNT_SUFFIXES = (("", ""), ("_2", "account-2"), ("_3", "account-3"))
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Aggregate LLM channel quota into a single JSON file")
     parser.add_argument("--out", default=OUT_DEFAULT, metavar="PATH", help="output JSON path")
@@ -236,17 +244,24 @@ def main(argv=None):
 
     channels = []
 
-    # 1. Volcengine Ark Coding Plan
-    if ak and sk:
+    # 1. Volcengine Ark Coding Plan — one entry per configured account
+    for suffix, label in ACCOUNT_SUFFIXES:
+        cred_names = (f"VOLC_ARK_AK{suffix}",) + (("VOLC_ACCESS_KEY",) if not suffix else ())
+        secret_names = (f"VOLC_ARK_SK{suffix}",) + (("VOLC_SECRET_KEY",) if not suffix else ())
+        acc_ak = first_env(env, *cred_names)
+        acc_sk = first_env(env, *secret_names)
+        chan_id = "volc-codingplan" + (f"-{label}" if label else "")
+        chan_name = "Volcengine Ark Coding Plan" + (f" ({label})" if label else "")
+        if not (acc_ak and acc_sk):
+            if not suffix:  # only complain when the primary pair is missing
+                channels.append({"id": chan_id, "name": chan_name, "state": "no_cred",
+                                 "note": "missing VOLC_ARK_AK / VOLC_ARK_SK"})
+            continue
         try:
-            channels.append({"id": "volc-codingplan", "name": "Volcengine Ark Coding Plan",
-                             **collect_volc_codingplan(env, ak, sk)})
+            channels.append({"id": chan_id, "name": chan_name,
+                             **collect_volc_codingplan(env, acc_ak, acc_sk)})
         except Exception as e:
-            channels.append({"id": "volc-codingplan", "name": "Volcengine Ark Coding Plan",
-                             "state": "error", "note": str(e)})
-    else:
-        channels.append({"id": "volc-codingplan", "name": "Volcengine Ark Coding Plan",
-                         "state": "no_cred", "note": "missing VOLC_ARK_AK / VOLC_ARK_SK"})
+            channels.append({"id": chan_id, "name": chan_name, "state": "error", "note": str(e)})
 
     # 2. Volcengine Ark Agent Plan
     if ak and sk:
