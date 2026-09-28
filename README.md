@@ -14,6 +14,34 @@ job that pings you) can render it. Standard library only, no dependencies.
 | OpenCode Go | 5h / weekly / monthly spend against $12 / $30 / $60 | `OPENCODE_GO_API_KEY` |
 | GitHub Copilot | reserved slot (needs a PAT with the `copilot` scope) | `GITHUB_TOKEN` |
 
+## What it writes
+
+One normalized file, whatever the provider — this is the repository's own
+`examples/sample-quota.json` (placeholder numbers, no credentials involved):
+
+```json
+{
+  "generated_at": "2026-01-01 12:00:00",
+  "channels": [
+    {
+      "id": "volc-codingplan",
+      "name": "Volcengine Ark Coding Plan",
+      "state": "ok",
+      "status": "Running",
+      "windows": [
+        { "label": "5h window", "used_pct": 17.1, "reset": "01-01 21:27" },
+        { "label": "weekly window", "used_pct": 14.5, "reset": "01-08 00:00" },
+        { "label": "monthly window", "used_pct": 21.4, "reset": "01-25 23:59" }
+      ]
+    }
+```
+
+*(abridged — the full file, including the agent-plan and Copilot entries, is
+`examples/sample-quota.json`.)*
+
+A provider that is unreachable, or for which you configured nothing, is reported
+as `state: unavailable` with the reason — never as a fake zero.
+
 ## Why
 
 Subscriptions cap you per window now (5 hours / day / week / month). Hitting the

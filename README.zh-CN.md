@@ -13,6 +13,31 @@
 | OpenCode Go | 5小时 / 周 / 月 消费对 $12 / $30 / $60 的占比 | `OPENCODE_GO_API_KEY` |
 | GitHub Copilot | 预留通道（需带 `copilot` scope 的 PAT） | `GITHUB_TOKEN` |
 
+## 输出长什么样
+
+不管接了几个渠道，最终都是同一个规范化 JSON——下面是仓库自带的 `examples/sample-quota.json`（占位数字，不含任何凭据）：
+
+```json
+{
+  "generated_at": "2026-01-01 12:00:00",
+  "channels": [
+    {
+      "id": "volc-codingplan",
+      "name": "Volcengine Ark Coding Plan",
+      "state": "ok",
+      "status": "Running",
+      "windows": [
+        { "label": "5h window", "used_pct": 17.1, "reset": "01-01 21:27" },
+        { "label": "weekly window", "used_pct": 14.5, "reset": "01-08 00:00" },
+        { "label": "monthly window", "used_pct": 21.4, "reset": "01-25 23:59" }
+      ]
+    }
+```
+
+*（节选，完整文件见 `examples/sample-quota.json`。）*
+
+读不到、或者你根本没配的渠道，会如实写成 `state: unavailable` 并附原因——不会伪造一个 0 出来。
+
 ## 为什么做这个
 
 订阅制现在都按窗口限流（5小时 / 日 / 周 / 月）。做到一半撞限额很难受，
